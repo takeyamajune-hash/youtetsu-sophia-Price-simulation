@@ -1,4 +1,16 @@
-import React, { useState, useMemo } from "react";
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>養哲塾 料金シミュレーション</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body style="margin:0;">
+<div id="root"></div>
+<script type="text/babel" data-presets="react">
 
 const PINK = "#D6486B";
 const TEAL = "#3E8FA6";
@@ -85,12 +97,12 @@ function yen(n) {
   return "¥" + Math.round(n).toLocaleString();
 }
 
-export default function FeeSimulator() {
-  const [grade, setGrade] = useState(null);
-  const [selectedSubjects, setSelectedSubjects] = useState([]);
-  const [seasonalChecked, setSeasonalChecked] = useState([]);
-  const [seasonalRadio, setSeasonalRadio] = useState(null);
-  const [copied, setCopied] = useState(false);
+function FeeSimulator() {
+  const [grade, setGrade] = React.useState(null);
+  const [selectedSubjects, setSelectedSubjects] = React.useState([]);
+  const [seasonalChecked, setSeasonalChecked] = React.useState([]);
+  const [seasonalRadio, setSeasonalRadio] = React.useState(null);
+  const [copied, setCopied] = React.useState(false);
 
   const subjects = grade ? SUBJECTS_BY_GRADE[grade] : [];
   const seasonal = grade ? SEASONAL_BY_GRADE[grade] : null;
@@ -115,13 +127,13 @@ export default function FeeSimulator() {
     );
   }
 
-  const monthly = useMemo(() => {
+  const monthly = React.useMemo(() => {
     return subjects
       .filter((s) => selectedSubjects.includes(s.name))
       .reduce((sum, s) => sum + s.price, 0);
   }, [subjects, selectedSubjects]);
 
-  const seasonalTotal = useMemo(() => {
+  const seasonalTotal = React.useMemo(() => {
     if (!seasonal) return 0;
     if (seasonal.kind === "checkbox") {
       return seasonal.items
@@ -138,7 +150,7 @@ export default function FeeSimulator() {
   const annualTuition = monthly * 12;
   const grandTotal = annualTuition + seasonalTotal;
 
-  const freeItems = useMemo(() => {
+  const freeItems = React.useMemo(() => {
     if (!grade) return [];
     const items = [...FREE_ITEMS_ALL];
     if (grade === "中3") items.push(FREE_ITEM_C3);
@@ -434,3 +446,9 @@ export default function FeeSimulator() {
     </div>
   );
 }
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<FeeSimulator />);
+</script>
+</body>
+</html>
